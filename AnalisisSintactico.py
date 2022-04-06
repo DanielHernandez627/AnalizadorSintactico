@@ -2,9 +2,12 @@ from tkinter import *
 from tkinter import messagebox as MessageBox
 from tkinter import filedialog
 
-splitToken = []
-
 #Inicio logica
+
+terminal = ["id","+","*","(",")","$"]
+splitToken = []
+splitToken2 = []
+
 def browseFiles(): 
     MessageBox.showwarning("Alerta","Cada cadena debe esta seperar por el simbolo |. Ejemplo Id|+|Id")
     rutfichero = filedialog.askopenfilename(initialdir = "/", 
@@ -13,8 +16,6 @@ def browseFiles():
                                                         "*.txt*"), 
                                                        ("all files", 
                                                         "*.*"))) 
-       
-    
     lb2.configure(text=rutfichero) 
 
 def openfile():
@@ -22,14 +23,33 @@ def openfile():
     for i in fichero.readlines():
         return i
 
+def remove_pila(x):
+    for t in terminal:
+        if x == t or x == "$":
+            if x == t:
+                return True
+            return False
+
+def error():
+    MessageBox.showwarning("Alerta","La pila esta vacia")
+
 def analizador():
     token = openfile()
-    print(token)
+    tokenFinal = token + "|$"
+    splitToken = tokenFinal.split("|")
+    splitToken2 = tokenFinal.split("|")
+    size_pila = len(splitToken)
+    for x in splitToken:
+        if remove_pila(x) == True:
+            splitToken2.remove(x)
+        else:
+            error()
+            break
 #Fin logica
 
 #Inicio configuracion grafica
 window = Tk()
-window.title('Analizador sintact|ico')
+window.title('Analizador sintactico')
 window.geometry('400x500')
 window['bg'] = "#D2D1D1"
 lb1 = Label(window,text="Seleccione el archivo a leer")
