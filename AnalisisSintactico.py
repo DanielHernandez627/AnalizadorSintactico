@@ -1,3 +1,4 @@
+from ast import If
 from tkinter import *
 from tkinter import messagebox as MessageBox
 from tkinter import filedialog
@@ -100,11 +101,17 @@ def printer_pila():
     print("movimientos de la pila \n")
     print(not_terminal)
 
+def printer_pila_entrada():
+    print("movimientos de la entrada \n")
+    print(splitToken2)
+
 def analizador():
     token = openfile()
     lb3['text'] = "Oracion ingresada: "+search_token(token)
     tokenFinal = token + "|$"
     splitToken = tokenFinal.split("|")
+    global splitToken2 
+    splitToken2 = tokenFinal.split("|")
     state_not_terminal_select = False
     not_terminal.append("$")
     not_terminal.append("E")
@@ -112,6 +119,8 @@ def analizador():
     printer_pila()
     for idx,x in enumerate(splitToken):
         terminal_select =  x
+        splitToken2.pop(0)
+        printer_pila_entrada()
         if remove_pila_terminal(not_terminal_select) == True or not_terminal_select == "$" and state_not_terminal_select == False:
             if remove_pila_terminal(not_terminal_select) == True:
                 printer_pila()
@@ -134,7 +143,7 @@ def analizador():
 #Inicio configuracion grafica
 window = Tk()
 window.title('Analizador sintactico')
-window.geometry('400x500')
+window.geometry('700x500')
 window['bg'] = "#D2D1D1"
 lb1 = Label(window,text="Seleccione el archivo a leer")
 lb1.grid(column=0,row=0)
@@ -155,10 +164,10 @@ lb5.place(x=30,y=110)
 lb5['bg'] = "#D2D1D1"
 btnsearch = Button(window,text="Buscar",command=browseFiles)
 btnsearch.grid(column=0,row=0)
-btnsearch.place(x=300,y= 48)
+btnsearch.place(x=500,y= 48)
 btnverify = Button(window,text="Verificar",command=analizador)
 btnverify.grid(column=0,row=0)
-btnverify.place(x=300,y=80)
+btnverify.place(x=500,y=80)
 #Fin configuracion grafica
 
 def run():
