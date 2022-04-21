@@ -14,6 +14,8 @@ not_terminal = []
 not_terminal_select = ""
 final_exit = ""
 fina_pila_exit = []
+state_pila = ""
+state_entrada = ""
 
 def browseFiles(): 
     MessageBox.showwarning("Alerta","Cada cadena debe esta seperar por el simbolo |. Ejemplo Id|+|Id")
@@ -69,11 +71,10 @@ def verify_Gramatic(size_terminal,x,ae):
         for zx in gramatic_return.split("|"): #Este for es para la generacion de salidas
             exit_gramitc = exit_gramitc + zx
         if i == 0:
-            final_exit = final_exit + "\n" + x_original + "->" + exit_gramitc
+            final_exit = final_exit + "\n" + "\n" + x_original + "->" + exit_gramitc
         else:
-            final_exit = final_exit + "\n" + x + "->" + exit_gramitc
+            final_exit = final_exit + "\n" + "\n" + x + "->" + exit_gramitc
         not_terminal.remove(x)
-        printer_pila()
 
         for z in reversed(gramatic_return.split("|")): #Este for es para la pila
             if  z != "e":
@@ -98,12 +99,18 @@ def search_final_not_terminal():
     return not_terminal_final
 
 def printer_pila():
-    print("movimientos de la pila \n")
-    print(not_terminal)
+    global state_pila
+    for i in not_terminal:
+        state_pila = state_pila + " " + i
+    state_pila = state_pila + "\n"
+    lb8.config(text=state_pila)
 
 def printer_pila_entrada():
-    print("movimientos de la entrada \n")
-    print(splitToken2)
+    global state_entrada
+    for i in splitToken2:
+        state_entrada = state_entrada + " " + i
+    state_entrada = state_entrada + "\n" + "\n"
+    lb9.config(text=state_entrada)
 
 def analizador():
     token = openfile()
@@ -117,6 +124,7 @@ def analizador():
     not_terminal.append("E")
     not_terminal_select = "E"
     printer_pila()
+    printer_pila_entrada()
     for idx,x in enumerate(splitToken):
         terminal_select =  x
         splitToken2.pop(0)
@@ -143,7 +151,7 @@ def analizador():
 #Inicio configuracion grafica
 window = Tk()
 window.title('Analizador sintactico')
-window.geometry('700x500')
+window.geometry('700x600')
 window['bg'] = "#D2D1D1"
 lb1 = Label(window,text="Seleccione el archivo a leer")
 lb1.grid(column=0,row=0)
@@ -157,11 +165,23 @@ lb3 = Label(window)
 lb3.place(x=30,y=75)
 lb3['bg'] = "#D2D1D1"
 lb4 = Label(window)
-lb4.place(x=30,y=120)
+lb4.place(x=320,y=115)
 lb4['bg'] = "#D2D1D1"
 lb5 = Label(window,text="Salida")
-lb5.place(x=30,y=110)
+lb5.place(x=320,y=110)
 lb5['bg'] = "#D2D1D1"
+lb6 = Label(window,text="Pila")
+lb6.place(x=50,y=110)
+lb6['bg'] = "#D2D1D1"
+lb7 = Label(window,text="Entrada")
+lb7.place(x=170,y=110)
+lb7['bg'] = "#D2D1D1"
+lb8 = Label(window)
+lb8.place(x=30,y=147)
+lb8['bg'] = "#D2D1D1"
+lb9 = Label(window)
+lb9.place(x=150,y=150)
+lb9['bg'] = "#D2D1D1"
 btnsearch = Button(window,text="Buscar",command=browseFiles)
 btnsearch.grid(column=0,row=0)
 btnsearch.place(x=500,y= 48)
