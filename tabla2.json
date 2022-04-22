@@ -105,12 +105,14 @@
             "SNP": "e",
             "V":"ver",
             "SV": "VP",
-            "VP": "V"
+            "VP": "V",
+            "$": "VP"
         }
     ],
     "las": [
         {
-            "DET": "las"
+            "DET": "las",
+            "$": "DET"
         }
     ],
     "opciones":[
@@ -119,7 +121,8 @@
             "SP": "SN",
             "SN": "NP",
             "N":"opciones",
-            "NP": "N"
+            "NP": "N",
+            "$": "SN"
         }
     ],
     "recomendadas":[
@@ -128,7 +131,8 @@
             "SP": "SN",
             "SN": "NP",
             "N":"recomendadas",
-            "NP": "N"
+            "NP": "N",
+            "$": "SN"
         }
     ],
     "su":[

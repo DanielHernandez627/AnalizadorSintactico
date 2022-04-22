@@ -1,8 +1,8 @@
-from ast import If
 from tkinter import *
 from tkinter import messagebox as MessageBox
 from tkinter import filedialog
 import json
+from webbrowser import get
 
 #Inicio logica
 
@@ -16,8 +16,36 @@ final_exit = ""
 fina_pila_exit = []
 state_pila = ""
 state_entrada = ""
+table = ""
+
+def clean():
+    lb2['text'] = ""
+    lb4['text'] = ""
+    lb8['text'] = ""
+    lb9['text'] = ""
+    global terminal_select
+    terminal_select = ""
+    global splitToken
+    splitToken = []
+    global splitToken2
+    splitToken2 = []
+    global not_terminal
+    not_terminal = []
+    global not_terminal_select
+    not_terminal_select = ""
+    global final_exit
+    final_exit = ""
+    global fina_pila_exit
+    fina_pila_exit = []
+    global state_pila
+    state_pila = ""
+    global state_entrada
+    state_entrada = ""
+    
+
 
 def browseFiles(): 
+    clean()
     MessageBox.showwarning("Alerta","Cada cadena debe esta seperar por el simbolo |. Ejemplo Id|+|Id")
     rutfichero = filedialog.askopenfilename(initialdir = "/", 
                                           title = "Select a File", 
@@ -50,13 +78,23 @@ def search_token(token):
     return senteceFinal
 
 def search_Gramatic(x,ae):
-    with open("tabla2.json","r") as j:
+    global table
+    if(verify_table_select() == 1):
+        table = "tablaIntroduccion.json"
+    elif(verify_table_select() == 2):
+        table = "tabla2.json"
+    with open(table,"r") as j:
         mydata = json.load(j)
         for data in mydata[ae]:
             return data[x]
 
 def search_Dataterminal(ae):
-    with open("tabla2.json","r") as j:
+    global table
+    if(verify_table_select() == 1):
+        table = "tablaIntroduccion.json"
+    elif(verify_table_select() == 2):
+        table = "tabla2.json"
+    with open(table,"r") as j:
         mydata = json.load(j)
         for data in mydata[ae]:
             return len(data)
@@ -114,6 +152,14 @@ def printer_pila_entrada():
     state_entrada = state_entrada + "\n" + "\n"
     lb9.config(text=state_entrada)
 
+def verify_table_select():
+    if(var1.get() == True and var2.get() == False):
+        return 1
+    elif(var1.get() == False and var2.get() == True):
+        return 2
+    else:
+        return 0
+
 def analizador():
     token = openfile()
     lb3['text'] = "Oracion ingresada: "+search_token(token)
@@ -123,8 +169,17 @@ def analizador():
     splitToken2 = tokenFinal.split("|")
     state_not_terminal_select = False
     not_terminal.append("$")
-    not_terminal.append("O")
-    not_terminal_select = "O"
+
+    if(verify_table_select() == 1):
+        not_terminal.append("E")
+        not_terminal_select = "E"
+    elif(verify_table_select() == 2):
+        not_terminal.append("O")
+        not_terminal_select = "O"
+    else:
+        MessageBox.showwarning("Alerta","Ninguna entrega seleccionada")
+        return 0
+        
     printer_pila()
     printer_pila_entrada()
     for idx,x in enumerate(splitToken):
@@ -155,7 +210,7 @@ def analizador():
 #Inicio configuracion grafica
 window = Tk()
 window.title('Analizador sintactico')
-window.geometry('700x600')
+window.geometry('700x650')
 window['bg'] = "#D2D1D1"
 lb1 = Label(window,text="Seleccione el archivo a leer")
 lb1.grid(column=0,row=0)
@@ -169,10 +224,10 @@ lb3 = Label(window)
 lb3.place(x=30,y=75)
 lb3['bg'] = "#D2D1D1"
 lb4 = Label(window)
-lb4.place(x=320,y=115)
+lb4.place(x=350,y=115)
 lb4['bg'] = "#D2D1D1"
 lb5 = Label(window,text="Salida")
-lb5.place(x=320,y=110)
+lb5.place(x=350,y=110)
 lb5['bg'] = "#D2D1D1"
 lb6 = Label(window,text="Pila")
 lb6.place(x=50,y=110)
@@ -192,6 +247,16 @@ btnsearch.place(x=500,y= 48)
 btnverify = Button(window,text="Verificar",command=analizador)
 btnverify.grid(column=0,row=0)
 btnverify.place(x=500,y=80)
+var1 = BooleanVar()
+var2 = BooleanVar()
+check1 = Checkbutton(window,text="Primera Entrega",variable=var1)
+check1.grid(column=0,row=0)
+check1.place(x=499,y=120)
+check1['bg'] = "#D2D1D1"
+check2 = Checkbutton(window,text="Segunda Entrega",variable=var2)
+check2.grid(column=0,row=0)
+check2.place(x=499,y=155)
+check2['bg'] = "#D2D1D1"
 #Fin configuracion grafica
 
 def run():
