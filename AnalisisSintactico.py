@@ -6,7 +6,7 @@ import json
 
 #Inicio logica
 
-terminal = ["id","+","*","(",")","$"]
+terminal = ["id","+","*","(",")","$","desea","otro","tipo","de","adicion","el","gustaria","ordenar","algo","mas","repetir","menu","ver","las","opciones","recomendadas","su","pedido"]
 terminal_select = ""
 splitToken = []
 splitToken2 = []
@@ -50,13 +50,13 @@ def search_token(token):
     return senteceFinal
 
 def search_Gramatic(x,ae):
-    with open("tablaintroduccion.json","r") as j:
+    with open("tabla2.json","r") as j:
         mydata = json.load(j)
         for data in mydata[ae]:
             return data[x]
 
 def search_Dataterminal(ae):
-    with open("tablaintroduccion.json","r") as j:
+    with open("tabla2.json","r") as j:
         mydata = json.load(j)
         for data in mydata[ae]:
             return len(data)
@@ -74,7 +74,8 @@ def verify_Gramatic(size_terminal,x,ae):
             final_exit = final_exit + "\n" + "\n" + x_original + "->" + exit_gramitc
         else:
             final_exit = final_exit + "\n" + "\n" + x + "->" + exit_gramitc
-        not_terminal.remove(x)
+        if(x != "$"):
+            not_terminal.remove(x)
 
         for z in reversed(gramatic_return.split("|")): #Este for es para la pila
             if  z != "e":
@@ -101,7 +102,8 @@ def search_final_not_terminal():
 def printer_pila():
     global state_pila
     for i in not_terminal:
-        state_pila = state_pila + " " + i
+        if len(not_terminal) > 1:
+            state_pila = state_pila + " " + i
     state_pila = state_pila + "\n"
     lb8.config(text=state_pila)
 
@@ -121,8 +123,8 @@ def analizador():
     splitToken2 = tokenFinal.split("|")
     state_not_terminal_select = False
     not_terminal.append("$")
-    not_terminal.append("E")
-    not_terminal_select = "E"
+    not_terminal.append("O")
+    not_terminal_select = "O"
     printer_pila()
     printer_pila_entrada()
     for idx,x in enumerate(splitToken):
@@ -136,10 +138,12 @@ def analizador():
                 printer_pila()
                 state_not_terminal_select = True
                 not_terminal_select = search_final_not_terminal()
-
-                if state_not_terminal_select == True: #Ejecucion de verificacion de gramaitca posterior a la eliminacion de un terminal de la pila
-                    not_terminal_select = verify_Gramatic(search_Dataterminal(terminal_select),not_terminal_select,terminal_select)
-                    state_not_terminal_select = False
+                if x != "$":
+                    if state_not_terminal_select == True: #Ejecucion de verificacion de gramaitca posterior a la eliminacion de un terminal de la pila
+                        not_terminal_select = verify_Gramatic(search_Dataterminal(terminal_select),not_terminal_select,terminal_select)
+                        state_not_terminal_select = False
+                else:
+                    break
             else:
                 error()
                 break
